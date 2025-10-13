@@ -4,7 +4,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -20,7 +24,9 @@ fun UrlInputSection(
     url: String,
     onUrlChange: (String) -> Unit,
     onShortenClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClearClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    urlError: String? = null
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -30,11 +36,24 @@ fun UrlInputSection(
             value = url,
             onValueChange = onUrlChange,
             label = { Text("Enter URL") },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            isError = urlError != null,
+            supportingText = {
+                if (urlError != null) {
+                    Text(urlError)
+                }
+            },
+            trailingIcon = {
+                if (url.isNotEmpty()) {
+                    IconButton(onClick = onClearClick) {
+                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                    }
+                }
+            }
         )
         Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-        Button(onClick = onShortenClick) {
-            Text("Shorten")
+        IconButton(onClick = onShortenClick) {
+            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Shorten")
         }
     }
 }
@@ -43,6 +62,14 @@ fun UrlInputSection(
 @Composable
 private fun UrlInputSectionPreview() {
     ShortenLinksTheme {
-        UrlInputSection(url = "https://www.google.com", onUrlChange = {}, onShortenClick = {})
+        UrlInputSection(url = "https://www.google.com", onUrlChange = {}, onShortenClick = {}, onClearClick = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun UrlInputSectionErrorPreview() {
+    ShortenLinksTheme {
+        UrlInputSection(url = "invalid url", onUrlChange = {}, onShortenClick = {}, onClearClick = {}, urlError = "Invalid URL")
     }
 }
