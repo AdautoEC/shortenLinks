@@ -1,6 +1,6 @@
 package br.com.warehouse.shortenlinks.features.shorten.di
 
-import br.com.warehouse.shortenlinks.features.shorten.data.repository.ShortenRepository
+import br.com.warehouse.shortenlinks.features.shorten.domain.repository.ShortenRepository
 import br.com.warehouse.shortenlinks.features.shorten.data.repository.ShortenRepositoryImpl
 import br.com.warehouse.shortenlinks.features.shorten.data.service.ShortenService
 import dagger.Binds

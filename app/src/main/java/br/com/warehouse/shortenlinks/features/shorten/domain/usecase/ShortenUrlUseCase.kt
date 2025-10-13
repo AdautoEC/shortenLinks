@@ -1,7 +1,7 @@
 package br.com.warehouse.shortenlinks.features.shorten.domain.usecase
 
 import br.com.warehouse.shortenlinks.core.presentation.model.LoadingEvent
-import br.com.warehouse.shortenlinks.features.shorten.data.repository.ShortenRepository
+import br.com.warehouse.shortenlinks.features.shorten.domain.repository.ShortenRepository
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

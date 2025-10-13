@@ -27,7 +27,7 @@ internal object NetworkModule {
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://url-shortener-server.onrender.com/api/")
+      .baseUrl("https://url-shortener-server.onrender.com/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
