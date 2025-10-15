@@ -19,6 +19,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 import br.com.warehouse.shortenlinks.ui.theme.spacing
 
+/**
+ * A composable that provides a text field for URL input and a button to trigger the shortening process.
+ *
+ * @param url The current value of the URL input field.
+ * @param onUrlChange A callback that is invoked when the URL input value changes.
+ * @param onShortenClick A callback that is invoked when the shorten button is clicked.
+ * @param onClearClick A callback that is invoked when the clear button is clicked.
+ * @param modifier The modifier to be applied to the composable.
+ * @param urlError An optional error message to be displayed below the text field.
+ * @param isLoading A boolean to indicate if the shortening process is in progress.
+ */
 @Composable
 fun UrlInputSection(
     url: String,

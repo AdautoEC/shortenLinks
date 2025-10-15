@@ -37,6 +37,14 @@ import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 
+/**
+ * A composable that displays a single item in the link history.
+ *
+ * It shows the shortened URL by default and allows the user to expand it to see the original URL.
+ * Both the shortened and original URLs can be copied to the clipboard.
+ *
+ * @param shorten The [Shorten] object containing the link information to display.
+ */
 @Composable
 fun LinkHistoryItem(shorten: Shorten) {
     var isExpanded by remember { mutableStateOf(false) }

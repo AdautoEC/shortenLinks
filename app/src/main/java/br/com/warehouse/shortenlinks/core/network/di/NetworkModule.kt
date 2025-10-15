@@ -10,10 +10,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Hilt module for providing network-related dependencies.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
+  /**
+   * Provides the [OkHttpClient] instance.
+   */
   @Provides
   @Singleton
   fun provideOkHttpClient(): OkHttpClient {
@@ -22,6 +28,11 @@ internal object NetworkModule {
       .build()
   }
 
+  /**
+   * Provides the [Retrofit] instance.
+   *
+   * @param okHttpClient The [OkHttpClient] to be used by Retrofit.
+   */
   @Provides
   @Singleton
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

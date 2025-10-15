@@ -14,12 +14,26 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * An interface representing a submittable operation.
+ *
+ * @param T The type of the data being submitted.
+ */
 interface Submittable<T> {
 
+    /**
+     * A [Flow] of [SubmitLoadingState]s representing the state of the submission.
+     */
     val flow: Flow<SubmitLoadingState<T>>
 
+    /**
+     * Submits the operation.
+     */
     fun submit()
 
+    /**
+     * Resets the submission state to its initial value.
+     */
     fun reset()
 }
 
@@ -121,6 +135,7 @@ fun <P, T : Any> ViewModel.submittable(
  * It provides a Flow of [SubmitLoadingState]s (stated in the ViewModel) and a `submit()` method.
  * It will execute whenever `submit()` is called.
  */
+@Suppress("unused")
 fun <T> ViewModel.submittable(
     scope: CoroutineScope = viewModelScope,
     started: SharingStarted = SharingStarted.Lazily,

@@ -2,7 +2,7 @@
 
 ## Visão Geral do Projeto
 
-**ShortenLinks** é um aplicativo Android nativo desenvolvido em Kotlin que permite aos usuários encurtar URLs. O usuário insere uma URL longa, e o aplicativo interage com uma API externa para gerar uma versão encurtada. Além disso, o app mantém um histórico dos links recém-encurtados, permitindo que o usuário copie tanto a URL original quanto a encurtada para a área de transferência.
+**ShortenLinks** é um aplicativo Android nativo desenvolvido em Kotlin que permite aos usuários encurtar e expandir URLs. O usuário pode inserir uma URL longa para gerar uma versão encurtada, ou inserir uma URL já encurtada para obter a original. O aplicativo interage com uma API externa para realizar essas operações e mantém um histórico dos links recém-processados, permitindo que o usuário copie tanto a URL original quanto a encurtada para a área de transferência.
 
 A interface é construída com Jetpack Compose, proporcionando uma experiência de usuário moderna e reativa.
 
@@ -15,18 +15,21 @@ Para a camada de apresentação, o padrão de design **MVI (Model-View-Intent)**
 - **Camada de Apresentação (Presentation):**
   - Construída inteiramente com **Jetpack Compose**.
   - A `ShortenScreen` emite eventos (Intents) para o `ShortenViewModel` (ex: `OnShortenClick`).
-  - O `ShortenViewModel` processa os eventos, executa a lógica de negócios (invocando o UseCase) e atualiza o `ShortenScreenState`.
+  - O `ShortenViewModel` processa os eventos, identifica se a URL deve ser encurtada ou expandida, executa a lógica de negócios (invocando o `UseCase` apropriado) e atualiza o `ShortenScreenState`.
   - A UI observa as mudanças no `ShortenScreenState` e se recompõe para refletir o novo estado (ex: exibir um loader, o resultado ou um erro).
 
 - **Camada de Domínio (Domain):**
   - Contém a lógica de negócios central e é independente de frameworks.
   - `ShortenUrlUseCase`: Orquestra a ação de encurtar uma URL.
+  - `GetOriginalUrlUseCase`: Orquestra a ação de obter a URL original a partir de um alias.
   - `ShortenRepository` (Interface): Define o contrato para as operações de dados, desacoplando o domínio da implementação da camada de dados.
+  - Modelos de domínio como `Shorten` e `OriginalUrl`.
 
 - **Camada de Dados (Data):**
   - `ShortenRepositoryImpl`: Implementação concreta do repositório. Utiliza o `ShortenService` para realizar as chamadas de rede.
-  - `ShortenService`: Interface do **Retrofit** que define os endpoints da API (`/api/alias`).
-  - `model`: Contém os DTOs (Data Transfer Objects) como `ShortenRequest` e `ShortenResponse` para serialização/deserialização com GSON.
+  - `ShortenService`: Interface do **Retrofit** que define os endpoints da API (`/api/alias` para POST e `/api/alias/{alias}` for GET).
+  - `model`: Contém os DTOs (Data Transfer Objects) como `ShortenRequest`, `ShortenResponse` e `GetUrlResponse` para serialização/deserialização com GSON.
+  - `mapper`: Contém funções para mapear os DTOs da camada de dados para os modelos da camada de domínio.
 
 ## Tecnologias e Bibliotecas
 

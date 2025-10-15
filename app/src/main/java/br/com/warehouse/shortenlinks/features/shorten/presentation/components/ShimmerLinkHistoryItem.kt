@@ -26,6 +26,11 @@ import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 
 import androidx.compose.ui.platform.testTag
 
+/**
+ * A composable that displays a shimmer animation for a link history item.
+ *
+ * This is used as a placeholder when the link history is loading.
+ */
 @Composable
 fun ShimmerLinkHistoryItem() {
     Row(modifier = Modifier.padding(vertical = 8.dp).testTag("ShimmerLinkHistoryItem")) {
@@ -48,6 +53,11 @@ fun ShimmerLinkHistoryItem() {
     }
 }
 
+/**
+ * A modifier that applies a shimmer effect to a composable.
+ *
+ * This is achieved by applying a sweeping linear gradient brush.
+ */
 fun Modifier.shimmerEffect(): Modifier = composed {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnim = transition.animateFloat(

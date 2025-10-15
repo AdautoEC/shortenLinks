@@ -20,6 +20,16 @@ import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
+/**
+ * ViewModel for the [ShortenScreen].
+ *
+ * This ViewModel is responsible for handling the business logic of the screen,
+ * processing user events, and managing the UI state.
+ *
+ * @param shortenUrlUseCase The use case for shortening a URL.
+ * @param getOriginalUrlUseCase The use case for getting the original URL from a shortened one.
+ * @param urlValidator The validator for the URL input.
+ */
 @HiltViewModel
 class ShortenViewModel @Inject constructor(
     private val shortenUrlUseCase: ShortenUrlUseCase,
@@ -33,6 +43,11 @@ class ShortenViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    /**
+     * Handles events from the UI.
+     *
+     * @param event The event to be processed.
+     */
     fun onEvent(event: ShortenScreenEvent) {
         when (event) {
             is ShortenScreenEvent.OnUrlChange -> {

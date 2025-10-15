@@ -5,6 +5,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
+/**
+ * A composable that displays an error dialog.
+ *
+ * @param title The title of the dialog.
+ * @param message The message to be displayed in the dialog.
+ * @param onDismiss A callback that is invoked when the dialog is dismissed.
+ */
 @Composable
 fun ErrorDialog(
     title: String,

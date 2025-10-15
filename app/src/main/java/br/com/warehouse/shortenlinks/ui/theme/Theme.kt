@@ -1,6 +1,5 @@
 package br.com.warehouse.shortenlinks.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,8 +10,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
-import br.com.warehouse.shortenlinks.ui.theme.LocalSpacing
-import br.com.warehouse.shortenlinks.ui.theme.Spacing
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -36,6 +33,13 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/**
+ * The main theme for the application.
+ *
+ * @param darkTheme Whether the theme should be dark or light.
+ * @param dynamicColor Whether to use dynamic color (available on Android 12+).
+ * @param content The content to be displayed within the theme.
+ */
 @Composable
 fun ShortenLinksTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

@@ -6,6 +6,9 @@ import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.OriginalUrl
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 
+/**
+ * Maps a [ShortenResponse] from the data layer to a [Shorten] in the domain layer.
+ */
 fun ShortenResponse.toDomain(): Shorten {
     return Shorten(
         alias = alias,
@@ -16,6 +19,9 @@ fun ShortenResponse.toDomain(): Shorten {
     )
 }
 
+/**
+ * Maps a [GetUrlResponse] from the data layer to an [OriginalUrl] in the domain layer.
+ */
 fun GetUrlResponse.toDomain(): OriginalUrl {
     return OriginalUrl(url = url)
 }

@@ -17,6 +17,9 @@ import br.com.warehouse.shortenlinks.features.shorten.presentation.components.Er
 import br.com.warehouse.shortenlinks.features.shorten.presentation.components.LinkHistoryList
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 
+/**
+ * A fake implementation of the [ShortenRepository] for preview purposes.
+ */
 private class FakeShortenRepository : ShortenRepository {
     override suspend fun shortenUrl(url: String): Shorten {
         if (url.isNotBlank() && url != "error") {
@@ -34,6 +37,9 @@ private class FakeShortenRepository : ShortenRepository {
     }
 }
 
+/**
+ * A fake implementation of the [UrlValidator] for preview purposes.
+ */
 private class FakeUrlValidator : UrlValidator {
     override fun isValid(url: String): Boolean {
         return url.isNotBlank()
@@ -42,6 +48,9 @@ private class FakeUrlValidator : UrlValidator {
 
 private fun getFakeGetOriginalUrlUseCase() = GetOriginalUrlUseCase(FakeShortenRepository())
 
+/**
+ * A preview of the [ErrorDialog] in dark mode.
+ */
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "ErrorDialog Dark Mode")
 @Composable
 fun ErrorDialogDarkPreview() {
@@ -50,6 +59,9 @@ fun ErrorDialogDarkPreview() {
     }
 }
 
+/**
+ * A preview of the [LinkHistoryList] in dark mode.
+ */
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "LinkHistoryList Dark Mode")
 @Composable
 fun LinkHistoryListDarkPreview() {
@@ -64,6 +76,9 @@ fun LinkHistoryListDarkPreview() {
     }
 }
 
+/**
+ * A preview of the [LinkHistoryList] in a loading state in dark mode.
+ */
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "LinkHistoryList Loading Dark Mode")
 @Composable
 fun LinkHistoryListLoadingDarkPreview() {
@@ -72,6 +87,9 @@ fun LinkHistoryListLoadingDarkPreview() {
     }
 }
 
+/**
+ * A preview of the [ShortenScreen] on a small phone.
+ */
 @SuppressLint("VisibleForTests", "ViewModelConstructorInComposable")
 @Preview(showBackground = true, name = "ShortenScreen - Small Phone", device = "spec:width=320dp,height=480dp,dpi=160")
 @Composable
@@ -89,6 +107,9 @@ fun ShortenScreenSmallPhonePreview() {
     }
 }
 
+/**
+ * A preview of the [ShortenScreen] on a large phone.
+ */
 @SuppressLint("VisibleForTests", "ViewModelConstructorInComposable")
 @Preview(showBackground = true, name = "ShortenScreen - Large Phone", device = "spec:width=411dp,height=891dp,dpi=420")
 @Composable
@@ -106,6 +127,9 @@ fun ShortenScreenLargePhonePreview() {
     }
 }
 
+/**
+ * A preview of the [ShortenScreen] on a tablet.
+ */
 @SuppressLint("VisibleForTests", "ViewModelConstructorInComposable")
 @Preview(showBackground = true, name = "ShortenScreen - Tablet", device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable

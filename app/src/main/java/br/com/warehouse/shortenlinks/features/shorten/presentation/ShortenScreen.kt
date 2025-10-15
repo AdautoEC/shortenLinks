@@ -27,6 +27,16 @@ import br.com.warehouse.shortenlinks.features.shorten.presentation.components.Ur
 import br.com.warehouse.shortenlinks.ui.theme.spacing
 import kotlinx.coroutines.flow.collectLatest
 
+/**
+ * The main screen of the application, responsible for user interaction.
+ *
+ * This screen allows the user to input a URL, shorten or expand it, and view the history of processed links.
+ * It observes the state from the [ShortenViewModel] and displays the UI accordingly.
+ *
+ * @param modifier The modifier to be applied to the screen.
+ * @param viewModel The view model that provides the state for this screen.
+ * @param snackbarHostState The state of the snackbar to show messages.
+ */
 @Composable
 fun ShortenScreen(
     modifier: Modifier = Modifier,

@@ -4,8 +4,16 @@ import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 
+/**
+ * An [Interceptor] that logs the details of the request and response.
+ *
+ * This is useful for debugging network requests.
+ */
 internal class HttpRequestInterceptor : Interceptor {
 
+  /**
+   * Intercepts the request and logs its details.
+   */
   override fun intercept(chain: Interceptor.Chain): Response {
     val originalRequest = chain.request()
     val request = originalRequest

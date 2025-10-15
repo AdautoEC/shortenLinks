@@ -10,6 +10,13 @@ import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 
+/**
+ * A composable that displays the result of the shorten/expand operation.
+ *
+ * It can show a loading indicator, a success message with the shortened URL, or an error message.
+ *
+ * @param state The current state of the submission process.
+ */
 @Composable
 fun ResultSection(state: SubmitLoadingState<Shorten>) {
     when (state) {
