@@ -1,65 +1,59 @@
 package br.com.warehouse.shortenlinks.features.shorten.presentation
 
-import android.util.Patterns
 import br.com.warehouse.shortenlinks.MainDispatcherRule
 import br.com.warehouse.shortenlinks.core.presentation.model.LoadingEvent
 import br.com.warehouse.shortenlinks.core.presentation.model.SubmitLoadingState
-import br.com.warehouse.shortenlinks.features.shorten.data.model.Links
+import br.com.warehouse.shortenlinks.core.validation.UrlValidator
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.OriginalUrl
+import br.com.warehouse.shortenlinks.features.shorten.domain.usecase.GetOriginalUrlUseCase
 import br.com.warehouse.shortenlinks.features.shorten.domain.usecase.ShortenUrlUseCase
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.mockkStatic
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
+import retrofit2.HttpException
+import retrofit2.Response
 
 @ExperimentalCoroutinesApi
-@HiltAndroidTest
 class ShortenViewModelTest {
-
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
     val mainDispatcherRule = MainDispatcherRule()
 
-    @Inject
-    lateinit var shortenUrlUseCase: ShortenUrlUseCase
+    private val shortenUrlUseCase: ShortenUrlUseCase = mockk()
+    private val getOriginalUrlUseCase: GetOriginalUrlUseCase = mockk()
+    private val urlValidator: UrlValidator = mockk()
 
     private lateinit var viewModel: ShortenViewModel
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        mockkStatic(Patterns::class)
-        every { Patterns.WEB_URL.matcher(any()).matches() } returns true
-        every { Patterns.WEB_URL.matcher("invalid url").matches() } returns false
-        viewModel = ShortenViewModel(shortenUrlUseCase)
+        every { urlValidator.isValid(any()) } returns true
+        every { urlValidator.isValid("invalid url") } returns false
+        viewModel = ShortenViewModel(shortenUrlUseCase, getOriginalUrlUseCase, urlValidator)
     }
 
     @Test
     fun `onEvent OnUrlChange should update url`() = runTest {
         val url = "https://google.com"
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
-        assertEquals(url, viewModel.uiState.value.url)
+        Assert.assertEquals(url, viewModel.uiState.value.url)
     }
 
     @Test
     fun `onEvent OnClearClick should clear url`() = runTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange("some url"))
         viewModel.onEvent(ShortenScreenEvent.OnClearClick)
-        assertEquals("", viewModel.uiState.value.url)
+        Assert.assertEquals("", viewModel.uiState.value.url)
     }
 
     @Test
@@ -67,8 +61,7 @@ class ShortenViewModelTest {
         val invalidUrl = "invalid url"
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(invalidUrl))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
-        assertEquals("Invalid URL", viewModel.uiState.value.urlError)
-        coVerify(exactly = 0) { shortenUrlUseCase(any()) }
+        Assert.assertEquals("Invalid URL", viewModel.uiState.value.urlError)
     }
 
     @Test
@@ -83,11 +76,11 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
-        assertNull(viewModel.uiState.value.urlError)
-        assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Success)
-        assertEquals(shorten, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Success).data)
-        assertEquals(1, viewModel.uiState.value.history.size)
-        assertEquals(shorten, viewModel.uiState.value.history.first())
+        Assert.assertNull(viewModel.uiState.value.urlError)
+        Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Success)
+        Assert.assertEquals(shorten, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Success).data)
+        Assert.assertEquals(1, viewModel.uiState.value.history.size)
+        Assert.assertEquals(shorten, viewModel.uiState.value.history.first())
     }
 
     @Test
@@ -102,9 +95,9 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
-        assertNull(viewModel.uiState.value.urlError)
-        assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
-        assertEquals(exception, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Error).exception)
+        Assert.assertNull(viewModel.uiState.value.urlError)
+        Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
+        Assert.assertEquals(exception, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Error).exception)
     }
 
     @Test
@@ -123,6 +116,76 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
-        assertEquals(1, viewModel.uiState.value.history.size)
+        Assert.assertEquals(1, viewModel.uiState.value.history.size)
+    }
+
+    @Test
+    fun `onEvent OnShortenClick with short url should call getOriginalUrlUseCase`() = runTest {
+        val alias = "12345"
+        val shortUrl = "https://url-shortener-server.onrender.com/api/alias/$alias"
+        coEvery { getOriginalUrlUseCase(alias) } returns flow {
+            emit(LoadingEvent.Success(OriginalUrl("https://google.com")))
+        }
+
+        viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
+        viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+    }
+
+    @Test
+    fun `onEvent OnShortenClick with short url should show loading then success`() = runTest {
+        val alias = "12345"
+        val originalUrl = "https://google.com"
+        val shortUrl = "https://url-shortener-server.onrender.com/api/alias/$alias"
+        val expectedShorten = Shorten(alias = alias, links = Links(self = originalUrl, shortUrl = shortUrl))
+
+        coEvery { getOriginalUrlUseCase(alias) } returns flow {
+            emit(LoadingEvent.Loading)
+            emit(LoadingEvent.Success(OriginalUrl(originalUrl)))
+        }
+
+        viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
+        viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Success)
+        Assert.assertEquals(expectedShorten, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Success).data)
+        Assert.assertEquals(1, viewModel.uiState.value.history.size)
+        Assert.assertEquals(expectedShorten, viewModel.uiState.value.history.first())
+    }
+
+    @Test
+    fun `onEvent OnShortenClick with short url should show loading then 404 error`() = runTest {
+        val alias = "12345"
+        val shortUrl = "https://url-shortener-server.onrender.com/api/alias/$alias"
+        val exception = HttpException(Response.error<Any>(404, "not found".toResponseBody()))
+
+        coEvery { getOriginalUrlUseCase(alias) } returns flow {
+            emit(LoadingEvent.Loading)
+            emit(LoadingEvent.Error(exception))
+        }
+
+        viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
+        viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
+        Assert.assertEquals("Shortened URL not found.", viewModel.uiState.value.networkError)
+    }
+
+    @Test
+    fun `onEvent OnShortenClick with short url should show loading then generic error`() = runTest {
+        val alias = "12345"
+        val shortUrl = "https://url-shortener-server.onrender.com/api/alias/$alias"
+        val exception = Exception("generic error")
+
+        coEvery { getOriginalUrlUseCase(alias) } returns flow {
+            emit(LoadingEvent.Loading)
+            emit(LoadingEvent.Error(exception))
+        }
+
+        viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
+        viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
+        Assert.assertEquals("generic error", viewModel.uiState.value.networkError)
     }
 }

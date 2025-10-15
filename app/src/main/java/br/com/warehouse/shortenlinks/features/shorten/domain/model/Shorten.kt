@@ -1,5 +1,11 @@
 package br.com.warehouse.shortenlinks.features.shorten.domain.model
 
-import br.com.warehouse.shortenlinks.features.shorten.data.model.ShortenResponse
+data class Shorten(
+    val alias: String,
+    val links: Links
+)
 
-typealias Shorten = ShortenResponse
+data class Links(
+    val self: String,
+    val shortUrl: String
+)

@@ -2,7 +2,7 @@ package br.com.warehouse.shortenlinks.features.shorten.domain.usecase
 
 import app.cash.turbine.test
 import br.com.warehouse.shortenlinks.core.presentation.model.LoadingEvent
-import br.com.warehouse.shortenlinks.features.shorten.data.model.Links
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.features.shorten.domain.repository.ShortenRepository
 import kotlinx.coroutines.test.runTest

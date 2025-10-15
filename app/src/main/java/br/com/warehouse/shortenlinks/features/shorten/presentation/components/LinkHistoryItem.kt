@@ -33,7 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.warehouse.shortenlinks.features.shorten.data.model.Links
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
 

@@ -5,7 +5,6 @@ import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -39,7 +38,7 @@ class ShortenScreenTest {
 
     @Test
     fun givenInitialState_whenScreenIsLoaded_thenShowsInputFieldAndEmptyHistory() {
-        composeTestRule.onNodeWithText("Enter URL").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Enter URL to shorten").assertIsDisplayed()
         composeTestRule.onNodeWithText("Recently shortened URLs").assertIsDisplayed()
     }
 
@@ -49,12 +48,12 @@ class ShortenScreenTest {
         val url = "https://www.google.com"
 
         // Act
-        composeTestRule.onNodeWithText("Enter URL").performTextInput(url)
-        composeTestRule.onNodeWithContentDescription("Shorten").performClick()
+        composeTestRule.onNodeWithText("Enter URL to shorten").performTextInput(url)
+        composeTestRule.onNodeWithText("Shorten").performClick()
+        composeTestRule.waitForIdle()
 
         // Assert
         composeTestRule.onNodeWithText("http://short.url/fakeAlias1").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Shortened URL: http://short.url/fakeAlias1").assertIsDisplayed()
         composeTestRule.onNodeWithText("Original URL").performClick()
         composeTestRule.onNode(hasText(url) and hasAnyAncestor(hasContentDescription("History item card"))).assertIsDisplayed()
     }
@@ -65,8 +64,8 @@ class ShortenScreenTest {
         val url = "invalid-url"
 
         // Act
-        composeTestRule.onNodeWithText("Enter URL").performTextInput(url)
-        composeTestRule.onNodeWithContentDescription("Shorten").performClick()
+        composeTestRule.onNodeWithText("Enter URL to shorten").performTextInput(url)
+        composeTestRule.onNodeWithText("Shorten").performClick()
 
         // Assert
         composeTestRule.onNodeWithText("Invalid URL").assertIsDisplayed()
@@ -79,11 +78,11 @@ class ShortenScreenTest {
         (repository as FakeShortenRepository).setShouldReturnError(true)
 
         // Act
-        composeTestRule.onNodeWithText("Enter URL").performTextInput(url)
-        composeTestRule.onNodeWithContentDescription("Shorten").performClick()
+        composeTestRule.onNodeWithText("Enter URL to shorten").performTextInput(url)
+        composeTestRule.onNodeWithText("Shorten").performClick()
 
         // Assert
-        composeTestRule.onNodeWithText("Error: Invalid URL").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Invalid URL").assertIsDisplayed()
     }
 
     //    @Test

@@ -1,17 +1,17 @@
 package br.com.warehouse.shortenlinks.features.shorten.presentation.components
 
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,17 +26,18 @@ fun UrlInputSection(
     onShortenClick: () -> Unit,
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
-    urlError: String? = null
+    urlError: String? = null,
+    isLoading: Boolean = false
 ) {
-    Row(
+    Column(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
+        OutlinedTextField(
             value = url,
             onValueChange = onUrlChange,
-            label = { Text("Enter URL") },
-            modifier = Modifier.weight(1f),
+            label = { Text("Enter URL to shorten") },
+            modifier = Modifier.fillMaxWidth(),
             isError = urlError != null,
             supportingText = {
                 if (urlError != null) {
@@ -49,11 +50,15 @@ fun UrlInputSection(
                         Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
                 }
-            }
+            },
+            singleLine = true
         )
-        Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-        IconButton(onClick = onShortenClick) {
-            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Shorten")
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+        Button(
+            onClick = onShortenClick,
+            enabled = !isLoading && url.isNotBlank()
+        ) {
+            Text("Shorten")
         }
     }
 }

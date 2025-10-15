@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import br.com.warehouse.shortenlinks.core.presentation.model.SubmitLoadingState
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.warehouse.shortenlinks.ui.theme.ShortenLinksTheme
@@ -46,7 +47,7 @@ private fun ResultSectionSuccessPreview() {
             state = SubmitLoadingState.Success(
                 Shorten(
                     alias = "alias123",
-                    links = br.com.warehouse.shortenlinks.features.shorten.data.model.Links(
+                    links = Links(
                         self = "https://original.url",
                         shortUrl = "https://short.url/123"
                     )

@@ -26,8 +26,8 @@ class UrlInputSectionTest {
         }
 
         // Assert
-        composeTestRule.onNodeWithText("Enter URL").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("Shorten").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Enter URL to shorten").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Shorten").assertIsDisplayed()
     }
 
     @Test
@@ -42,7 +42,7 @@ class UrlInputSectionTest {
                 UrlInputSection(url = "", onUrlChange = onUrlChange, onShortenClick = {}, onClearClick = {})
             }
         }
-        composeTestRule.onNodeWithText("Enter URL").performTextInput("https://google.com")
+        composeTestRule.onNodeWithText("Enter URL to shorten").performTextInput("https://google.com")
 
         // Assert
         assertEquals("https://google.com", changedUrl)
@@ -60,7 +60,7 @@ class UrlInputSectionTest {
                 UrlInputSection(url = "https://google.com", onUrlChange = {}, onShortenClick = onShortenClick, onClearClick = {})
             }
         }
-        composeTestRule.onNodeWithContentDescription("Shorten").performClick()
+        composeTestRule.onNodeWithText("Shorten").performClick()
 
         // Assert
         assertEquals(true, clicked)

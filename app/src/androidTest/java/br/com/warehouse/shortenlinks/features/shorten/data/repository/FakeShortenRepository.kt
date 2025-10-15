@@ -1,8 +1,8 @@
 package br.com.warehouse.shortenlinks.features.shorten.data.repository
 
-import br.com.warehouse.shortenlinks.features.shorten.data.model.GetUrlResponse
-import br.com.warehouse.shortenlinks.features.shorten.data.model.Links
-import br.com.warehouse.shortenlinks.features.shorten.data.model.ShortenResponse
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.OriginalUrl
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.features.shorten.domain.repository.ShortenRepository
 
 class FakeShortenRepository : ShortenRepository {
@@ -13,12 +13,12 @@ class FakeShortenRepository : ShortenRepository {
         shouldReturnError = value
     }
 
-    override suspend fun shortenUrl(url: String): ShortenResponse {
+    override suspend fun shortenUrl(url: String): Shorten {
         if (shouldReturnError || url.isBlank()) {
             throw Exception("Invalid URL")
         }
         counter++
-        return ShortenResponse(
+        return Shorten(
             alias = "fakeAlias$counter",
             links = Links(
                 self = url,
@@ -27,7 +27,10 @@ class FakeShortenRepository : ShortenRepository {
         )
     }
 
-    override suspend fun getOriginalUrl(alias: String): GetUrlResponse {
-        return GetUrlResponse(url = "http://long.url")
+    override suspend fun getOriginalUrl(alias: String): OriginalUrl {
+        if (shouldReturnError) {
+            throw Exception("Invalid alias")
+        }
+        return OriginalUrl(url = "http://long.url/$alias")
     }
 }
