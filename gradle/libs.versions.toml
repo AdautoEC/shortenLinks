@@ -8,7 +8,7 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2024.09.00"
-hilt = "2.57.1"
+hilt = "2.57.2"
 ksp = "2.0.21-1.0.25"
 retrofit = "2.9.0"
 okHttp = "4.12.0"
@@ -16,7 +16,7 @@ hiltNavigationCompose = "1.2.0"
 kotlinx-coroutines = "1.8.0"
 turbine = "1.1.0"
 mockitoKotlin = "5.2.1"
-mockk = "1.13.11"
+mockk = "1.14.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

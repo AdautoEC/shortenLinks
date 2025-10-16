@@ -5,8 +5,8 @@ import br.com.warehouse.shortenlinks.core.presentation.model.LoadingEvent
 import br.com.warehouse.shortenlinks.core.presentation.model.SubmitLoadingState
 import br.com.warehouse.shortenlinks.core.validation.UrlValidator
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.Links
-import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.features.shorten.domain.model.OriginalUrl
+import br.com.warehouse.shortenlinks.features.shorten.domain.model.Shorten
 import br.com.warehouse.shortenlinks.features.shorten.domain.usecase.GetOriginalUrlUseCase
 import br.com.warehouse.shortenlinks.features.shorten.domain.usecase.ShortenUrlUseCase
 import io.mockk.coEvery
@@ -14,6 +14,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert
@@ -76,6 +77,8 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
+        advanceUntilIdle()
+
         Assert.assertNull(viewModel.uiState.value.urlError)
         Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Success)
         Assert.assertEquals(shorten, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Success).data)
@@ -94,6 +97,8 @@ class ShortenViewModelTest {
 
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        advanceUntilIdle()
 
         Assert.assertNull(viewModel.uiState.value.urlError)
         Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
@@ -115,6 +120,8 @@ class ShortenViewModelTest {
         // Second time
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(url))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        advanceUntilIdle()
 
         Assert.assertEquals(1, viewModel.uiState.value.history.size)
     }
@@ -147,6 +154,8 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
+        advanceUntilIdle()
+
         Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Success)
         Assert.assertEquals(expectedShorten, (viewModel.uiState.value.shortenUrlState as SubmitLoadingState.Success).data)
         Assert.assertEquals(1, viewModel.uiState.value.history.size)
@@ -167,6 +176,8 @@ class ShortenViewModelTest {
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
 
+        advanceUntilIdle()
+
         Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
         Assert.assertEquals("Shortened URL not found.", viewModel.uiState.value.networkError)
     }
@@ -184,6 +195,8 @@ class ShortenViewModelTest {
 
         viewModel.onEvent(ShortenScreenEvent.OnUrlChange(shortUrl))
         viewModel.onEvent(ShortenScreenEvent.OnShortenClick)
+
+        advanceUntilIdle()
 
         Assert.assertTrue(viewModel.uiState.value.shortenUrlState is SubmitLoadingState.Error)
         Assert.assertEquals("generic error", viewModel.uiState.value.networkError)
